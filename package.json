@@ -3,5 +3,13 @@
   "version": "1.0.0",
   "main": "app.js",
   "author": "Adam Zerner <adamzerner@protonmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.9.20"
+  },
+  "scripts": {
+    "start": "node init/app.js",
+    "start-db": "mongod --dbpath ~/data/db"
+  }
 }
