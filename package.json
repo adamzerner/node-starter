@@ -1,0 +1,7 @@
+{
+  "name": "node-starter",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "Adam Zerner <adamzerner@protonmail.com>",
+  "license": "MIT"
+}
