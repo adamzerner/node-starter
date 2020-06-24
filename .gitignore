@@ -1,0 +1,18 @@
+shit.todo
+notes.txt
+
+.DS_Store
+node_modules/
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+test/unit/coverage
+*.mov
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
