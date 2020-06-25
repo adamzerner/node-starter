@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo")(session);
 
 module.exports = (app) => {
+  const User = mongoose.model("User");
   const SESSION_OPTIONS = {
     secret: process.env.EXPRESS_SESSION_SECRET,
     name: "sessionId",
