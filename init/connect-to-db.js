@@ -5,6 +5,7 @@ module.exports = (cb) => {
     .connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     })
     .then(cb)
     .catch((e) => {
