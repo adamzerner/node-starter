@@ -1,7 +1,20 @@
+const async = require("async");
+const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
+const PASSWORD_CHANGE_EMAIL = require("../../emails/password-change");
+const {
+  developmentTransportOptions,
+  productionTransportOptions,
+} = require("../../config/mail");
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
+  let mailTransport = nodemailer.createTransport(
+    process.env.NODE_ENV === "production"
+      ? productionTransportOptions
+      : developmentTransportOptions
+  );
+
   async.waterfall(
     [
       (done) => {
@@ -13,7 +26,7 @@ module.exports = (req, res) => {
           (err, user) => {
             if (!user) {
               return res.status(403).json({
-                status: "Password reset token is invalid or has expired.",
+                errors: ["Password reset token is invalid or has expired."],
               });
             }
 
@@ -23,10 +36,10 @@ module.exports = (req, res) => {
               });
             }
 
-            if (req.body.newPassword.length < 8) {
+            if (req.body.newPassword.length < 6) {
               return res.status(422).json({
                 errors: [
-                  "New password is too short. It must beat least 8 characters.",
+                  "New password is too short. It must beat least 6 characters.",
                 ],
               });
             }
@@ -41,18 +54,22 @@ module.exports = (req, res) => {
         );
       },
       (user, done) => {
-        let mailOptions = {
+        const mailOptions = {
           to: user.email,
-          from: '"Premium Poker Tools" <contact@premiumpokertools.com>',
+          from: '"VueStarter" <noreply@vuestarter.com>',
           subject: "Your password has been changed",
           html: PASSWORD_CHANGE_EMAIL,
         };
 
-        mailTransporter.sendMail(mailOptions, (err) => {
+        mailTransport.sendMail(mailOptions, (err, info) => {
+          if (process.env.NODE_ENV !== "production") {
+            console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+          }
+
           res.status(200).json({
             status: "Success",
           });
-          done(err);
+          done(err, "done");
         });
       },
     ],
