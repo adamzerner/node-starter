@@ -16,6 +16,7 @@
     "express-session": "^1.17.1",
     "express-sslify": "^1.2.0",
     "helmet": "^3.23.2",
+    "lodash": "^4.17.15",
     "mongoose": "^5.9.20",
     "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
