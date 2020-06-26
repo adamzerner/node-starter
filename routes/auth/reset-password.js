@@ -1,9 +1,21 @@
 const async = require("async");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
+const getResetPasswordEmail = require("../../emails/reset-password");
+const {
+  developmentTransportOptions,
+  productionTransportOptions,
+} = require("../../config/mail");
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
+  let mailTransport = nodemailer.createTransport(
+    process.env.NODE_ENV === "production"
+      ? productionTransportOptions
+      : developmentTransportOptions
+  );
+
   async.waterfall(
     [
       (done) => {
@@ -27,16 +39,20 @@ module.exports = (req, res) => {
           });
         });
       },
-      (token, user, done) => {
+      async (token, user, done) => {
         const resetPasswordUrl = `${process.env.BASE_CLIENT_URL}/create-new-password/${token}`;
         const mailOptions = {
           to: user.email,
-          from: '"Premium Poker Tools" <contact@premiumpokertools.com>',
+          from: '"VueStarter" <noreply@vuestarter.com>',
           subject: "Reset Password",
-          html: resetPasswordEmailFactory(resetPasswordUrl),
+          html: getResetPasswordEmail(resetPasswordUrl),
         };
 
-        mailTransporter.sendMail(mailOptions, (err) => {
+        mailTransport.sendMail(mailOptions, function (err, info) {
+          if (process.env.NODE_ENV !== "production") {
+            console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+          }
+
           res.status(201).json({
             status: "Success",
           });
@@ -44,10 +60,11 @@ module.exports = (req, res) => {
         });
       },
     ],
-    (err) => {
-      if (err) {
+    (e) => {
+      if (e) {
+        console.log(e);
         return res.status(500).json({
-          status: "Unknown error.",
+          errors: ["Unknown error."],
         });
       }
     }
