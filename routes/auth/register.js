@@ -1,9 +1,20 @@
+const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
+const {
+  developmentTransportOptions,
+  productionTransportOptions,
+} = require("../../config/mail");
+const WELCOME_EMAIL = require("../../emails/welcome");
 
 module.exports = (req, res, next) => {
   const userFromReq = req.body.user;
   const validationErrors = checkIfUserIsValid(userFromReq);
+  const mailTransport = nodemailer.createTransport(
+    process.env.NODE_ENV === "production"
+      ? productionTransportOptions
+      : developmentTransportOptions
+  );
 
   if (validationErrors.length > 0) {
     return res.status(422).json({
@@ -25,26 +36,43 @@ module.exports = (req, res, next) => {
           .save()
           .then(function (userInstance) {
             req.login(userInstance, function () {
-              // sendWelcomeEmail(userInstance.email);
-              res.status(201).json({
-                user: {
-                  email: userInstance.email,
-                  googleId: userInstance.googleId,
-                  twitterId: userInstance.twitterId,
-                  linkedinId: userInstance.linkedinId,
-                  created: userInstance.created,
-                  auth: userInstance.auth,
-                  settings: userInstance.settings,
-                },
+              const mailOptions = {
+                from: '"VueStarter" <contact@vuestarter.com>',
+                to: userInstance.email,
+                subject: "Welcome to VueStarter!",
+                html: WELCOME_EMAIL,
+              };
+              mailTransport.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                  return res.status(500);
+                }
+
+                if (process.env.NODE_ENV !== "production") {
+                  console.log(
+                    `Welcome email: ${nodemailer.getTestMessageUrl(info)}`
+                  );
+                }
+
+                res.status(201).json({
+                  user: {
+                    email: userInstance.email,
+                    googleId: userInstance.googleId,
+                    twitterId: userInstance.twitterId,
+                    linkedinId: userInstance.linkedinId,
+                    created: userInstance.created,
+                    auth: userInstance.auth,
+                    settings: userInstance.settings,
+                  },
+                });
               });
             });
           })
-          .catch(function () {
+          .catch((err) => {
             res.status(500);
           });
       }
     })
-    .catch(function () {
+    .catch((err) => {
       res.status(500);
     });
 };
@@ -67,33 +95,4 @@ const checkIfUserIsValid = (user) => {
   }
 
   return validationErrors;
-};
-
-const sendWelcomeEmail = (userEmail) => {
-  const mailOptions = {
-    from: '"Premium Poker Tools" <contact@premiumpokertools.com>',
-    to: userEmail,
-    subject: `Welcome to Premium Poker Tools!`,
-    html: WELCOME_EMAIL,
-  };
-
-  mailTransporter.sendMail(mailOptions, function (err, info) {
-    if (err) {
-      return res.status(500);
-    }
-
-    res.status(201).json({
-      user: {
-        email: userInstance.email,
-        googleId: userInstance.googleId,
-        twitterId: userInstance.twitterId,
-        linkedinId: userInstance.linkedinId,
-        created: userInstance.created,
-        auth: userInstance.auth,
-        emailOptIn: userInstance.emailOptIn,
-        savedScenarios: userInstance.savedScenarios,
-        settings: userInstance.settings,
-      },
-    });
-  });
 };

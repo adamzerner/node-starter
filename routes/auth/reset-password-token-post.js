@@ -63,7 +63,9 @@ module.exports = async (req, res) => {
 
         mailTransport.sendMail(mailOptions, (err, info) => {
           if (process.env.NODE_ENV !== "production") {
-            console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+            console.log(
+              `Password change email: ${nodemailer.getTestMessageUrl(info)}`
+            );
           }
 
           res.status(200).json({
