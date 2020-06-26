@@ -3,5 +3,7 @@ const router = express.Router();
 
 router.post("/register", require("./register"));
 router.post("/sign-in", require("./sign-in"));
+router.get("/me", require("./me"));
+router.get("/default", require("./default"));
 
 module.exports = router;
