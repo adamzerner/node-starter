@@ -10,7 +10,7 @@ const {
 } = require("../../config/mail");
 
 module.exports = async (req, res) => {
-  let mailTransport = nodemailer.createTransport(
+  const mailTransport = nodemailer.createTransport(
     process.env.NODE_ENV === "production"
       ? productionTransportOptions
       : developmentTransportOptions

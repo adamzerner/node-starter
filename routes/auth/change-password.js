@@ -1,3 +1,10 @@
+const nodemailer = require("nodemailer");
+const {
+  developmentTransportOptions,
+  productionTransportOptions,
+} = require("../../config/mail");
+const PASSWORD_CHANGE_EMAIL = require("../../emails/password-change");
+
 module.exports = (req, res) => {
   if (!req.body.newPassword) {
     return res.status(422).json({
@@ -17,23 +24,35 @@ module.exports = (req, res) => {
     });
   }
 
+  const mailTransport = nodemailer.createTransport(
+    process.env.NODE_ENV === "production"
+      ? productionTransportOptions
+      : developmentTransportOptions
+  );
+
   req.user.setPassword(req.body.newPassword);
   req.user
     .save()
     .then((userInstance) => {
-      // let mailOptions = {
-      //   to: userInstance.email,
-      //   from: '"Premium Poker Tools" <contact@premiumpokertools.com>',
-      //   subject: "Your password has been changed",
-      //   html: PASSWORD_CHANGE_EMAIL,
-      // };
-      //
-      // mailTransporter.sendMail(mailOptions, function (err) {
-      res.status(200).json({
-        status: "Success",
+      const mailOptions = {
+        to: userInstance.email,
+        from: '"VueStarter" <contact@vuestarter.com>',
+        subject: "Your password has been changed",
+        html: PASSWORD_CHANGE_EMAIL,
+      };
+
+      mailTransport.sendMail(mailOptions, function (err, info) {
+        if (process.env.NODE_ENV !== "production") {
+          console.log(
+            `Password change email: ${nodemailer.getTestMessageUrl(info)}`
+          );
+        }
+
+        res.status(200).json({
+          status: "Success",
+        });
       });
     })
-    // })
     .catch(() => {
       res.status(500).json({
         errors: ["Internal server error."],
