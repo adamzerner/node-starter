@@ -34,7 +34,7 @@ module.exports = (app) => {
     });
   });
   require("./local-strategy");
-  // require("./google-strategy");
-  // require("./twitter-strategy");
-  // require("./linkedin-strategy");
+  require("./google-strategy");
+  require("./twitter-strategy");
+  require("./linkedin-strategy");
 };
