@@ -1,6 +1,6 @@
-let bodyParser = require("body-parser");
-let cors = require("cors");
-let mongoSanitize = require("express-mongo-sanitize");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const mongoSanitize = require("express-mongo-sanitize");
 
 module.exports = (app) => {
   const CORS_OPTIONS = {

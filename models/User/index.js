@@ -1,6 +1,6 @@
-let mongoose = require("mongoose");
-let crypto = require("crypto");
-let defaultSettings = require("./default-settings");
+const mongoose = require("mongoose");
+const crypto = require("crypto");
+const defaultSettings = require("./default-settings");
 let UserSchema;
 let User;
 
@@ -10,7 +10,7 @@ UserSchema = new mongoose.Schema({
     unique: true,
     required: true,
     validate: {
-      validator: function (email) {
+      validator: (email) => {
         return /\S+@\S+\.\S+/.test(email);
       },
       message: "Invalid email",
@@ -39,33 +39,34 @@ UserSchema = new mongoose.Schema({
   },
   stripeCustomerId: String,
 });
-UserSchema.methods.setPassword = function (password) {
+UserSchema.methods.setPassword = (password) => {
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
 };
-UserSchema.methods.validatePassword = function (password) {
-  let hash = crypto
+UserSchema.methods.validatePassword = (password) => {
+  const hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
 
   return this.hash === hash;
 };
-UserSchema.statics.findByEmail = function (email) {
+UserSchema.statics.findByEmail = (email) => {
   return this.findOne({ email: email });
 };
-UserSchema.statics.findOneOrCreate = function (condition, callback) {
-  let self = this;
+UserSchema.statics.findOneOrCreate = (condition, callback) => {
+  const self = this;
 
-  self.findOne(condition, function (err, result) {
-    if (result) {
-      return callback(err, result, "found");
+  return self.findOne(condition).then((userInstance) => {
+    if (!userInstance) {
+      return self.create(condition).then((userInstance) => ({
+        userInstance: userInstance,
+        foundOrCreated: "created",
+      }));
     }
 
-    self.create(condition, function (err, result) {
-      return callback(err, result, "created");
-    });
+    return { userInstance: userInstance, foundOrCreated: "found" };
   });
 };
 User = mongoose.model("User", UserSchema);

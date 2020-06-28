@@ -1,4 +1,4 @@
-module.exports = function (url) {
+module.exports = (url) => {
   return `
     <p>You are receiving this email because you (or someone else) has requested to reset the password of this account. Please visit the following link to complete the password reset process:</p>
     <p><a href="${url}">${url}</a></p>

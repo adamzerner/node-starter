@@ -26,7 +26,6 @@ module.exports = async (req, res) => {
       sessionId: checkoutSession.id,
     });
   } catch (e) {
-    console.log(e);
     res.status(500).json({
       errors: ["Internal server error."],
     });

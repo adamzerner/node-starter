@@ -1,6 +1,6 @@
-let enforce = require("express-sslify");
-let helmet = require("helmet");
-let compression = require("compression");
+const enforce = require("express-sslify");
+const helmet = require("helmet");
+const compression = require("compression");
 
 module.exports = (app) => {
   app.set("trust proxy", true);

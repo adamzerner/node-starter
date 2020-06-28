@@ -10,38 +10,38 @@ module.exports = (req, res, next) => {
     });
   }
 
-  return passport.authenticate("local", function (err, user, info) {
+  return passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
     }
 
-    if (user) {
-      req.login(user, function (err) {
-        if (err) {
-          res.status(500).json({
-            errors: ["Internal server error"],
-          });
-        } else {
-          if (req.body.keepMeSignedIn) {
-            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
-          }
-
-          res.json({
-            user: {
-              email: user.email,
-              googleId: user.googleId,
-              twitterId: user.twitterId,
-              linkedinId: user.linkedinId,
-              created: user.created,
-              auth: user.auth,
-              settings: user.settings,
-            },
-          });
-        }
-      });
-    } else {
-      res.status(400).json(info);
+    if (!user) {
+      return res.status(400).json(info);
     }
+
+    req.login(user, (err) => {
+      if (err) {
+        return res.status(500).json({
+          errors: ["Internal server error"],
+        });
+      }
+
+      if (req.body.keepMeSignedIn) {
+        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
+      }
+
+      res.json({
+        user: {
+          email: user.email,
+          googleId: user.googleId,
+          twitterId: user.twitterId,
+          linkedinId: user.linkedinId,
+          created: user.created,
+          auth: user.auth,
+          settings: user.settings,
+        },
+      });
+    });
   })(req, res, next);
 };
 

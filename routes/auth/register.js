@@ -1,20 +1,13 @@
-const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
-const {
-  developmentTransportOptions,
-  productionTransportOptions,
-} = require("../../config/mail");
-const WELCOME_EMAIL = require("../../emails/welcome");
+const { sendWelcomeEmail } = require("../../services/send-welcome-email");
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   const userFromReq = req.body.user;
   const validationErrors = checkIfUserIsValid(userFromReq);
-  const mailTransport = nodemailer.createTransport(
-    process.env.NODE_ENV === "production"
-      ? productionTransportOptions
-      : developmentTransportOptions
-  );
+  let userFromDB;
+  let userInstance;
+  let savedUser;
 
   if (validationErrors.length > 0) {
     return res.status(422).json({
@@ -22,59 +15,37 @@ module.exports = (req, res, next) => {
     });
   }
 
-  User.findByEmail(userFromReq.email)
-    .then(function (userFromDB) {
-      if (userFromDB) {
-        return res.status(422).json({
-          errors: ["An account with this email already exists."],
-        });
-      } else {
-        const userInstance = new User(userFromReq);
+  try {
+    userFromDB = await User.findByEmail(userFromReq.email);
 
-        userInstance.setPassword(userFromReq.password);
-        userInstance
-          .save()
-          .then(function (userInstance) {
-            req.login(userInstance, function () {
-              const mailOptions = {
-                from: '"VueStarter" <contact@vuestarter.com>',
-                to: userInstance.email,
-                subject: "Welcome to VueStarter!",
-                html: WELCOME_EMAIL,
-              };
-              mailTransport.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                  return res.status(500);
-                }
+    if (userFromDB) {
+      return res.status(422).json({
+        errors: ["An account with this email already exists."],
+      });
+    }
 
-                if (process.env.NODE_ENV !== "production") {
-                  console.log(
-                    `Welcome email: ${nodemailer.getTestMessageUrl(info)}`
-                  );
-                }
-
-                res.status(201).json({
-                  user: {
-                    email: userInstance.email,
-                    googleId: userInstance.googleId,
-                    twitterId: userInstance.twitterId,
-                    linkedinId: userInstance.linkedinId,
-                    created: userInstance.created,
-                    auth: userInstance.auth,
-                    settings: userInstance.settings,
-                  },
-                });
-              });
-            });
-          })
-          .catch((err) => {
-            res.status(500);
-          });
-      }
-    })
-    .catch((err) => {
-      res.status(500);
+    userInstance = new User(userFromReq);
+    userInstance.setPassword(userFromReq.password);
+    savedUser = await userInstance.save();
+    req.login(savedUser, async () => {
+      await sendWelcomeEmail(savedUser.email);
+      res.status(201).json({
+        user: {
+          email: savedUser.email,
+          googleId: savedUser.googleId,
+          twitterId: savedUser.twitterId,
+          linkedinId: savedUser.linkedinId,
+          created: savedUser.created,
+          auth: savedUser.auth,
+          settings: savedUser.settings,
+        },
+      });
     });
+  } catch (e) {
+    res.status(500).json({
+      errors: ["Internal server error."],
+    });
+  }
 };
 
 const checkIfUserIsValid = (user) => {
