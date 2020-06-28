@@ -39,23 +39,23 @@ UserSchema = new mongoose.Schema({
   },
   stripeCustomerId: String,
 });
-UserSchema.methods.setPassword = (password) => {
+UserSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
 };
-UserSchema.methods.validatePassword = (password) => {
+UserSchema.methods.validatePassword = function (password) {
   const hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
 
   return this.hash === hash;
 };
-UserSchema.statics.findByEmail = (email) => {
+UserSchema.statics.findByEmail = function (email) {
   return this.findOne({ email: email });
 };
-UserSchema.statics.findOneOrCreate = (condition, callback) => {
+UserSchema.statics.findOneOrCreate = function (condition, callback) {
   const self = this;
 
   return self.findOne(condition).then((userInstance) => {
