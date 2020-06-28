@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
   }
 };
 
-const checkIfPayloadIsValid = (user) => {
+const checkIfPayloadIsValid = (req) => {
   const validationErrors = [];
 
   if (!req.body.newPassword) {
