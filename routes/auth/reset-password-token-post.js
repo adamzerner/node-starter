@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
       resetPasswordToken: req.params.token,
       resetPasswordExpires: { $gt: Date.now() },
     });
-    const validationErrors = checkIfUserIsValid(user);
+    const validationErrors = checkIfUserIsValid(req, user);
 
     if (validationErrors.length > 0) {
       return res.status(422).json({
@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
   }
 };
 
-const checkIfUserIsValid = (user) => {
+const checkIfUserIsValid = (req, user) => {
   const validationErrors = [];
 
   if (!user) {
