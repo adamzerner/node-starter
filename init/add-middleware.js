@@ -11,7 +11,16 @@ module.exports = (app) => {
     credentials: true,
   };
 
-  app.use(bodyParser.json({ limit: "500mb" }));
+  app.use(
+    bodyParser.json({
+      limit: "500mb",
+      verify: (req, res, buf) => {
+        if (req.originalUrl.startsWith("/user/checkout-webhook")) {
+          req.rawBody = buf.toString();
+        }
+      },
+    })
+  );
   app.use(cors(CORS_OPTIONS));
   app.use(mongoSanitize());
 };

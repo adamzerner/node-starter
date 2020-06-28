@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.BASE_CLIENT_URL}/account?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.BASE_CLIENT_URL}/account?plan=${req.body.plan}&user-id=${req.user.id}`,
       cancel_url: `${process.env.BASE_CLIENT_URL}/purchase`,
     });
 
