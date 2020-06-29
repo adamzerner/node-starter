@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
-const { sendWelcomeEmail } = require("../../services/send-welcome-email");
+const sendWelcomeEmail = require("../../services/send-welcome-email");
 
 module.exports = async (req, res, next) => {
   const userFromReq = req.body.user;

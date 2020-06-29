@@ -24,7 +24,7 @@ module.exports = (ssoId) => {
         await sendWelcomeEmail(userInstance.email);
       }
 
-      done(err, userInstance);
+      done(null, userInstance);
     } catch (e) {
       return done(null, false, {
         errors: ["Internal server error."],
