@@ -6,6 +6,7 @@ const url = require("url");
 const sendPurchaseConfirmationEmail = require("../../services/send-purchase-confirmation-email");
 
 module.exports = async (req, res) => {
+  console.log("hits /user/checkout-webhook");
   const sig = req.headers["stripe-signature"];
 
   let event;
@@ -17,10 +18,12 @@ module.exports = async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
+    console.log("Error constructing event: ", err);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === "checkout.session.completed") {
+    console.log("checkout.session.completed");
     const session = event.data.object;
     const planType = url.parse(session.success_url, true).query.plan;
     const userId = url.parse(session.success_url, true).query["user-id"];
@@ -32,6 +35,7 @@ module.exports = async (req, res) => {
       sendPurchaseConfirmationEmail(user.email, planType);
       await user.save();
     } catch (e) {
+      console.log("Error: ", e);
       return res.status(500);
     }
   }
