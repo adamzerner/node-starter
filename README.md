@@ -1,11 +1,87 @@
-### Connecting to the database
+# NodeStarter
 
-First, make sure you start the database locally on your machine using `mongod`. If you need to set the `--dbpath`, there is a `start-db` script in `package.json` that you can use. Be sure to adjust the path based on where you have mongo set up on your machine.
+If you're starting a project, there are usually some standard things that you'll need: accounts, payments, route protection, etc. The idea with NodeStarter is to provide you with all of this boilerplate.
 
-It attempts to connect to a database based on the environment variable `MONGODB_URI`. This variable is initially set to `mongodb://localhost/node-starter`, so you're going to want to substitute out the `node-starter` part for your project's name. You'll also have to make sure to set this environment variable properly in your production environment as well.
+Note: This repo is only for serve-side code. For client-side code, it works in conjunction with [VueStarter](https://github.com/adamzerner/vue-starter). You can of course use a different frontend.
+
+## What it comes with
+
+See https://github.com/adamzerner/vue-starter#what-it-comes-with.
+
+## Getting started
+
+### First steps
+
+1. `git clone git@github.com:adamzerner/node-starter.git your-apps-name`
+2. `yarn install`
+3. Run your database locally. Eg. with `mongod`.
+4. Create `.env` and set the following environment variables: `PORT`, `NODE_ENV`, `MONGODB_URI` (different if you're using a different database), `EXPRESS_SESSION_SECRET`, `BASE_API_URL` and `BASE_CLIENT_URL`. My defaults are below.
+5. `yarn start`
+
+#### My .env defaults
+
+```
+PORT=3000
+NODE_ENV=development
+MONGODB_URI=mongodb://localhost/node-starter
+EXPRESS_SESSION_SECRET=foobar
+BASE_API_URL=http://localhost:3000
+BASE_CLIENT_URL=http://localhost:8080
+```
+
+#### Connecting to the database
+
+It attempts to connect to a database based on the environment variable `MONGODB_URI`. See `init/connect-to-db.js`.
+
+If you [need](https://stackoverflow.com/questions/7948789/mongod-complains-that-there-is-no-data-db-folder) to set the `--dbpath`, there is a `start-db` script in `package.json` that you can use. Be sure to adjust the path based on where you have mongo set up on your machine.
+
+### Nodemailer
+
+This app [uses](https://nodemailer.com/about/#tldr) [Ethereal](https://ethereal.email/) to deal with emails in development. Instead of actually sending them, Ethereal intercepts them and provides you with a link to view the would-be email.
+
+Create an account with Ethereal and fill in `config/mail.js` with your details.
+
+### [Prettier](https://prettier.io/)
+
+If you want it:
+
+1. Make whatever [adjustments](https://prettier.io/docs/en/configuration.html) you want to `.prettierrc`.
+2. Make sure that you have a [plugin](https://prettier.io/docs/en/editors.html) set up with your editor.
+
+If you don't:
+
+1. Remove `.prettierrc`.
+
+### SSO
+
+If you want it:
+
+- You have to create and configure stuff in developer console for Google, Twitter and LinkedIn. Go to the corresponding Passport strategy packages to see some direction for how to do that.
+- Gotchas:
+  - For Twitter make sure you enable email access.
+  - For LinkedIn you need to add the "Sign In with LinkedIn" product in order to have access to the users email.
+
+If you don't:
+
+1. `yarn remove passport-google-oauth20 passport-linkedin-oauth2 passport-twitter`
+2. Remove `routes/sso`, adjust `routes/index.js`, and remove stuff from the `passport` folder.
+3. `cmd+f` and remove `googleId`, `twitterId`, and `linkedinId`.
 
 ### Stripe
 
-- Using Stripe Checkout
-- Uses webhooks. Need to run `yarn forward-stripe-webhook` to test in development.
-- Need to fill in various environment variables.
+This codebase uses Stripe checkout. See https://stripe.com/docs/payments/checkout/accept-a-payment and https://github.com/stripe-samples/checkout-one-time-payments/tree/master/client-and-server/server for more information.
+
+If you want it:
+
+1. Create an account.
+2. Create a project.
+3. [Create a product and price](https://stripe.com/docs/payments/checkout/accept-a-payment#create-products-and-prices). This codebase uses a product called "Basic Plan" and second called "Premium Plan" but you can use whatever you want. The important part is setting the `STRIPE_BASIC_PLAN_PRICE_ID` and `STRIPE_PREMIUM_PLAN_PRICE_ID` environment variables based on the price ids.
+4. To [confirm the payment is successful](https://stripe.com/docs/payments/checkout/accept-a-payment#payment-success), this codebase is using webhooks. To set up a webhook, go to https://dashboard.stripe.com/test/webhooks and add a webhook with the endpoint `https://your-production-domain.com/user/checkout-webhook`. Then set the environment variable `STRIPE_WEBHOOK_SECRET` to the "Signing secret".
+5. Run `yarn forward-stripe-webhook` to test in development.
+
+If you don't:
+
+1. Remove `stripeCustomerId` in `models/User/index.js` and elsewhere (use `cmd+f`).
+2. Remove `verify` from `init/add-middleware.js`.
+3. Remove `emails/purchase-confirmation-email.js` and `services/send-purchase-confirmation-email.js`.
+4. Remove the `checkout-session` and `checkout-webhook` routes in `routes/user`.
