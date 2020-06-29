@@ -3,6 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const url = require("url");
+const sendPurchaseConfirmationEmail = require("../../services/send-purchase-confirmation-email");
 
 module.exports = async (req, res) => {
   const sig = req.headers["stripe-signature"];
@@ -28,6 +29,7 @@ module.exports = async (req, res) => {
     giveAuthToUser(user, planType);
 
     try {
+      await sendPurchaseConfirmationEmail(user.email, planType);
       await user.save();
     } catch (e) {
       return res.status(500);

@@ -3,4 +3,5 @@ module.exports = {
   sendWelcomeEmail: require("./send-welcome-email"),
   sendPasswordChangeEmail: require("./send-password-change-email"),
   sendResetPasswordEmail: require("./send-reset-password-email"),
+  sendPurchaseConfirmationEmail: require("./send-purchase-confirmation-email"),
 };
