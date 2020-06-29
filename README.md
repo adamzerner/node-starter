@@ -77,7 +77,7 @@ If you want it:
 2. Create a project.
 3. [Create a product and price](https://stripe.com/docs/payments/checkout/accept-a-payment#create-products-and-prices). This codebase uses a product called "Basic Plan" and second called "Premium Plan" but you can use whatever you want. The important part is setting the `STRIPE_BASIC_PLAN_PRICE_ID` and `STRIPE_PREMIUM_PLAN_PRICE_ID` environment variables based on the price ids.
 4. To [confirm the payment is successful](https://stripe.com/docs/payments/checkout/accept-a-payment#payment-success), this codebase is using webhooks. To set up a webhook, go to https://dashboard.stripe.com/test/webhooks and add a webhook with the endpoint `https://your-production-domain.com/user/checkout-webhook`. Then set the environment variable `STRIPE_WEBHOOK_SECRET` to the "Signing secret".
-5. Run `yarn forward-stripe-webhook` to test in development.
+5. To test in development you'll need to [forward the webhooks to your local server](https://stripe.com/docs/payments/checkout/accept-a-payment#testing-webhooks-locally). The `yarn forward-stripe-webhook` script will do that for you.
 
 If you don't:
 
