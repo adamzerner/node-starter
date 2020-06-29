@@ -37,9 +37,7 @@ If you [need](https://stackoverflow.com/questions/7948789/mongod-complains-that-
 
 ### Nodemailer
 
-This app [uses](https://nodemailer.com/about/#tldr) [Ethereal](https://ethereal.email/) to deal with emails in development. Instead of actually sending them, Ethereal intercepts them and provides you with a link to view the would-be email.
-
-Create an account with Ethereal and fill in `config/mail.js` with your details.
+This app [uses](https://nodemailer.com/about/#tldr) [Ethereal](https://ethereal.email/) to deal with emails in development. Instead of actually sending them, Ethereal intercepts them and provides you with a link to view the would-be email. Create an account with Ethereal and fill in `config/mail.js` with your details.
 
 ### [Prettier](https://prettier.io/)
 
@@ -98,3 +96,4 @@ See https://devcenter.heroku.com/articles/deploying-nodejs.
   - For the SSO stuff, it'll be the same as what's in your `.env`.
   - For Stripe you're going to want to use a production value for all of the values. For `STRIPE_WEBHOOK_SECRET` [get it](https://stripe.com/docs/webhooks/signatures) from the webhook dashboard page.
 - Be sure to set the correct callback URLs for SSO.
+- Fill in `productionTransportOptions` in `config/mail.js`. My goto is to use Zoho Mail.
