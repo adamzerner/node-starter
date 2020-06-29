@@ -85,3 +85,7 @@ If you don't:
 2. Remove `verify` from `init/add-middleware.js`.
 3. Remove `emails/purchase-confirmation-email.js` and `services/send-purchase-confirmation-email.js`.
 4. Remove the `checkout-session` and `checkout-webhook` routes in `routes/user`.
+
+## Deploying
+
+See https://devcenter.heroku.com/articles/deploying-nodejs. And be sure to set your environment variables in production.

@@ -30,5 +30,8 @@
     "start": "node init/app.js",
     "start-db": "mongod --dbpath ~/data/db",
     "forward-stripe-webhook": "stripe listen --forward-to localhost:3000/user/checkout-webhook"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
