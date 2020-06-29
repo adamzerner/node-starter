@@ -88,4 +88,16 @@ If you don't:
 
 ## Deploying
 
-See https://devcenter.heroku.com/articles/deploying-nodejs. And be sure to set your environment variables in production.
+See https://devcenter.heroku.com/articles/deploying-nodejs.
+
+You'll also need a production database. I like the [mLab MongoDB](https://devcenter.heroku.com/articles/mongolab) add-on in Heroku.
+
+And be sure to set your environment variables in production.
+
+- `MONGODB_URI` should be set for you automatically if you use the `mLab MongoDB` add on.
+- You'll have to set `NODE_ENV`, `BASE_API_URL` and `BASE_CLIENT_URL` to their production values.
+- For the `EXPRESS_SESSION_SECRET`, use a [random string of characters](https://github.com/expressjs/session#secret).
+- For the SSO stuff, it'll be the same as what's in your `.env`.
+- For Stripe you're going to want to use a production value for `STRIPE_API_KEY`, `STRIPE_BASIC_PLAN_PRICE_ID`, and `STRIPE_PREMIUM_PLAN_PRICE_ID`.
+
+You'll also need a production database. I like the [mLab MongoDB](https://devcenter.heroku.com/articles/mongolab) add-on in Heroku.
