@@ -15,7 +15,7 @@ module.exports = (app) => {
     bodyParser.json({
       limit: "500mb",
       verify: (req, res, buf) => {
-        if (req.originalUrl.startsWith("/user/checkout-webhook")) {
+        if (req.originalUrl.includes("/user/checkout-webhook")) {
           req.rawBody = buf.toString();
         }
       },
