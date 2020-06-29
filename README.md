@@ -96,5 +96,5 @@ See https://devcenter.heroku.com/articles/deploying-nodejs.
   - You'll have to set `NODE_ENV`, `BASE_API_URL` and `BASE_CLIENT_URL` to their production values.
   - For the `EXPRESS_SESSION_SECRET`, use a [random string of characters](https://github.com/expressjs/session#secret).
   - For the SSO stuff, it'll be the same as what's in your `.env`.
-  - For Stripe you're going to want to use a production value for `STRIPE_API_KEY`, `STRIPE_BASIC_PLAN_PRICE_ID`, and `STRIPE_PREMIUM_PLAN_PRICE_ID`.
+  - For Stripe you're going to want to use a production value for all of the values. For `STRIPE_WEBHOOK_SECRET` [get it](https://stripe.com/docs/webhooks/signatures) from the webhook dashboard page.
 - Be sure to set the correct callback URLs for SSO.
