@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     user.resetPasswordToken = token;
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
-    await sendResetPasswordEmail(user.email, token);
+    sendResetPasswordEmail(user.email, token);
     res.status(201).json({
       status: "Success",
     });

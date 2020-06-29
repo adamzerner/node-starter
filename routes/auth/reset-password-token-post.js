@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     user.resetPasswordToken = null;
     user.resetPasswordExpires = null;
     await user.save();
-    await sendPasswordChangeEmail(user.email);
+    sendPasswordChangeEmail(user.email);
     res.status(200).json({
       status: "Success",
     });

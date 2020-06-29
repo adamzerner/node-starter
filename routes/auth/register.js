@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
     userInstance.setPassword(userFromReq.password);
     savedUser = await userInstance.save();
     req.login(savedUser, async () => {
-      await sendWelcomeEmail(savedUser.email);
+      sendWelcomeEmail(savedUser.email);
       res.status(201).json({
         user: {
           email: savedUser.email,

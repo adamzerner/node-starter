@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
     giveAuthToUser(user, planType);
 
     try {
-      await sendPurchaseConfirmationEmail(user.email, planType);
+      sendPurchaseConfirmationEmail(user.email, planType);
       await user.save();
     } catch (e) {
       return res.status(500);

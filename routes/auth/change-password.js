@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   try {
     req.user.setPassword(req.body.newPassword);
     userInstance = await req.user.save();
-    await sendPasswordChangeEmail(userInstance.email);
+    sendPasswordChangeEmail(userInstance.email);
     res.status(200).json({
       status: "Success",
     });
