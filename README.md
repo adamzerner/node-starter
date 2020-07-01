@@ -55,11 +55,27 @@ If you don't:
 ### SSO
 
 If you want it:
-
-- You have to create and configure stuff in developer console for Google, Twitter and LinkedIn. Go to the corresponding Passport strategy packages to see some direction for how to do that.
-- Gotchas:
-  - For Twitter make sure you enable email access.
-  - For LinkedIn you need to add the "Sign In with LinkedIn" product in order to have access to the users email.
+- For Google:
+  1. Go to the [developer console](https://console.developers.google.com).
+  2. Create a project.
+  3. Set up your OAuth Consent Screen.
+  4. Create an OAuth 2.0 Client ID.
+  5. For "Authorized JavaScript origins", use your value for `BASE_CLIENT_URL` (development and production).
+  6. For "Authorized redirect URIs", use use your value for `BASE_API_URL` (development and production) and then add `/sso/google/callback`. Eg. `http://localhost:3000/sso/google/callback` and `https://nodestarter.herokuapp.com/sso/google/callback`.
+  7. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` according to what you're given.
+- For Twitter:
+  1. Go to the [developer console](https://developer.twitter.com/en/apps).
+  2. [Create](https://developer.twitter.com/en/apps/create) an app.
+  3. Make sure you enable sign in with Twitter.
+  4. For "Callback URLs", use your value for `BASE_API_URL` (development and production) and then add `/sso/twitter/callback`. Eg. `http://localhost:3000/sso/twitter/callback` and `https://nodestarter.herokuapp.com/sso/twitter/callback`.
+  5. Once created, go to the "Keys and tokens" tab, generate an "Access token & access token secret", and use those values for `TWITTER_CONSUMER_KEY` and `TWITTER_CONSUMER_SECRET` respectively.
+  6. Then go to the "Permissions" tab, click "Edit", check off "Request email address from users" under "Additional permissions" and click "Save".
+- For LinkedIn:
+  1. Go to the [developer console](https://www.linkedin.com/developers/).
+  2. [Create](https://www.linkedin.com/developers/apps/new) an app.
+  3. Go to the "Auth" tab and use "Client ID" and "Client Secret" for your `LINKEDIN_KEY` and `LINKEDIN_SECRET` environment variables respectively.
+  4. For "Authorized redirect URLs for your app", use your value for `BASE_API_URL` (development and production) and then add `/sso/linkedin/callback`. Eg. `http://localhost:3000/sso/linkedin/callback` and `https://nodestarter.herokuapp.com/sso/linkedin/callback`.
+  5. Go to the "Products" tab and add "Sign In with LinkedIn".
 
 If you don't:
 
