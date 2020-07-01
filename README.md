@@ -93,8 +93,9 @@ If you want it:
 2. Create a new account/project.
 3. Under "Get your test API keys", use the value for "Secret key" for your `STRIPE_API_KEY` environment variable ("Publishable key" is for the client-side codebase).
 4. [Create a product and price](https://stripe.com/docs/payments/checkout/accept-a-payment#create-products-and-prices). This codebase uses a product called "Basic Plan" and second called "Premium Plan" but you can use whatever you want. The important part is setting the `STRIPE_BASIC_PLAN_PRICE_ID` and `STRIPE_PREMIUM_PLAN_PRICE_ID` environment variables based on the price ids.
-5. To [confirm the payment is successful](https://stripe.com/docs/payments/checkout/accept-a-payment#payment-success), this codebase is using webhooks. To set up a webhook, go to https://dashboard.stripe.com/test/webhooks and add a webhook with the endpoint `https://your-production-domain.com/user/checkout-webhook`. Then set the environment variable `STRIPE_WEBHOOK_SECRET` to the "Signing secret".
-6. To test in development you'll need to [forward the webhooks to your local server](https://stripe.com/docs/payments/checkout/accept-a-payment#testing-webhooks-locally). The `yarn forward-stripe-webhook` script will do that for you.
+5. To [confirm the payment is successful](https://stripe.com/docs/payments/checkout/accept-a-payment#payment-success), this codebase is using webhooks. To set up a webhook, go to https://dashboard.stripe.com/test/webhooks and add a webhook with the endpoint `https://your-production-domain.com/user/checkout-webhook`. Under "Events to send" add the "checkout.session.completed" event and then click "Add endpoint" at the bottom right.
+6. Then set the environment variable `STRIPE_WEBHOOK_SECRET` to the "Signing secret".
+7. To test in development you'll need to [forward the webhooks to your local server](https://stripe.com/docs/payments/checkout/accept-a-payment#testing-webhooks-locally). The `yarn forward-stripe-webhook` script will do that for you.
 
 If you don't:
 
