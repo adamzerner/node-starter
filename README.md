@@ -68,8 +68,8 @@ If you want it:
   2. [Create](https://developer.twitter.com/en/apps/create) an app.
   3. Make sure you enable sign in with Twitter.
   4. For "Callback URLs", use your value for `BASE_API_URL` (development and production) and then add `/sso/twitter/callback`. Eg. `http://localhost:3000/sso/twitter/callback` and `https://nodestarter.herokuapp.com/sso/twitter/callback`.
-  5. Once created, go to the "Keys and tokens" tab, generate an "Access token & access token secret", and use those values for `TWITTER_CONSUMER_KEY` and `TWITTER_CONSUMER_SECRET` respectively.
-  6. Then go to the "Permissions" tab, click "Edit", check off "Request email address from users" under "Additional permissions" and click "Save".
+  5. Go to the "Permissions" tab, click "Edit", check off "Request email address from users" under "Additional permissions" and click "Save".
+  6. Once created, go to the "Keys and tokens" tab, generate an "Access token & access token secret", and use those values for `TWITTER_CONSUMER_KEY` and `TWITTER_CONSUMER_SECRET` respectively.
 - For LinkedIn:
   1. Go to the [developer console](https://www.linkedin.com/developers/).
   2. [Create](https://www.linkedin.com/developers/apps/new) an app.
