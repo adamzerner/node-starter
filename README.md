@@ -12,7 +12,7 @@ See https://github.com/adamzerner/vue-starter#what-it-comes-with.
 
 ### First steps
 
-1. [Generate your own template](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) and then clone. Or clone from this repo with git clone git@github.com:adamzerner/node-starter.git your-apps-name and then set your git remote properly.
+1. [Generate your own template](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) and then clone. Or clone from this repo with `git clone git@github.com:adamzerner/node-starter.git your-apps-name` and then set your `git remote` properly.
 2. `yarn install`
 3. Change the `name` in `package.json`
 4. Update stuff in `emails` to use your app's name instead of Node Starter
