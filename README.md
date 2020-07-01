@@ -12,11 +12,13 @@ See https://github.com/adamzerner/vue-starter#what-it-comes-with.
 
 ### First steps
 
-1. `git clone git@github.com:adamzerner/node-starter.git your-apps-name`
+1. [Generate your own template](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) and then clone. Or clone from this repo with git clone git@github.com:adamzerner/node-starter.git your-apps-name and then set your git remote properly.
 2. `yarn install`
-3. Run your database locally. Eg. with `mongod`.
-4. Create `.env` and set the following environment variables: `PORT`, `NODE_ENV`, `MONGODB_URI` (different if you're using a different database), `EXPRESS_SESSION_SECRET`, `BASE_API_URL` and `BASE_CLIENT_URL`. My defaults are below.
-5. `yarn start`
+3. Change the `name` in `package.json`
+4. Update stuff in `emails` to use your app's name instead of Node Starter
+5. Run your database locally. Eg. with `mongod`.
+6. Create `.env` and set the following environment variables: `PORT`, `NODE_ENV`, `MONGODB_URI` (different if you're using a different database), `EXPRESS_SESSION_SECRET`, `BASE_API_URL` and `BASE_CLIENT_URL`. My defaults are below.
+7. `yarn start`
 
 #### My .env defaults
 
